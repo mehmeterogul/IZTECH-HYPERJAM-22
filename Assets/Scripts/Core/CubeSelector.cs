@@ -18,6 +18,10 @@ public class CubeSelector : MonoBehaviour
     int maxCubeCount = 0;
     List<GameObject> selectedCubes = new List<GameObject>();
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip selectCubeSound;
+    [SerializeField] AudioClip throwCubeSound;
+
     private void Awake()
     {
         foreach (Transform child in gameObject.transform)
@@ -29,6 +33,7 @@ public class CubeSelector : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -66,6 +71,8 @@ public class CubeSelector : MonoBehaviour
                     Destroy(temp, 1f);
                 }
 
+                audioSource.PlayOneShot(throwCubeSound, 1f);
+
                 ClearCubes();
                 CantSelect();
                 FindObjectOfType<GameController>().SelectionComplete();
@@ -98,6 +105,8 @@ public class CubeSelector : MonoBehaviour
                 selectedCubes.Add(selection.gameObject);
                 selection.tag = selectedTag;
                 selectedCubeCount++;
+
+                audioSource.PlayOneShot(selectCubeSound, 0.85f);
             }
         }
     }

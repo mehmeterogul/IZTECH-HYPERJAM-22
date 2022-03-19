@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class GameController : MonoBehaviour
     STATE state = STATE.RUNNING;
 
     [SerializeField] TextMeshProUGUI cubeCountText;
+    [SerializeField] GameObject gameOverText;
+    [SerializeField] GameObject restartButton;
 
     // Start is called before the first frame update
     void Start()
@@ -109,6 +113,8 @@ public class GameController : MonoBehaviour
     public void PlayerHittedWall()
     {
         isGameOver = true;
+        gameOverText.SetActive(true);
+        restartButton.SetActive(true);
     }
 
     public void LevelFinished()
@@ -121,5 +127,17 @@ public class GameController : MonoBehaviour
         cubeCountText.transform.DORewind();
         cubeCountText.transform.DOPunchScale(new Vector3(0.3f, 0.5f, 0.3f), .25f);
         cubeCountText.text = cubeSelector.GetCubeCount().ToString();
+    }
+
+    public void RestartButton()
+    {
+        restartButton.GetComponent<Button>().interactable = false;
+        StartCoroutine(RestartLevel());
+    }
+
+    public IEnumerator RestartLevel()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -11,13 +11,19 @@ public class PlayerController : MonoBehaviour
     Vector3 lastMousePosition;
 
     bool canMove = true;
+    bool hasHitted = false;
 
     GameController gameController;
+    AudioSource audioSource;
     [SerializeField] Animator animator;
+    [SerializeField] AudioClip pickUpSound;
+    [SerializeField] AudioClip hitObstacleSound;
+    [SerializeField] AudioClip hitWallSound;
 
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
+        audioSource = GetComponent<AudioSource>();
 
         if (!gameController)
         {
@@ -57,11 +63,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("CubeObstacle"))
+        if (collision.gameObject.CompareTag("CubeObstacle") && !hasHitted)
         {
+            audioSource.PlayOneShot(hitWallSound, 1f);
             gameController.PlayerHittedWall();
             SetCanMoveFalse();
             animator.SetTrigger("crash");
+            hasHitted = true;
         }
     }
 
@@ -75,30 +83,26 @@ public class PlayerController : MonoBehaviour
 
         if (other.gameObject.CompareTag("Collectable"))
         {
+            audioSource.PlayOneShot(pickUpSound, 0.85f);
             gameController.PlayerPickedUpCollectable();
-            StartCoroutine(DestroyGameObject(other.gameObject));
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.CompareTag("Obstacle"))
         {
+            audioSource.PlayOneShot(hitObstacleSound, 1f);
             gameController.PlayerHittedObtsacle();
-            StartCoroutine(DestroyGameObject(other.gameObject));
+            transform.DORewind();
+            transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f);
         }
-    }
-
-    IEnumerator DestroyGameObject(GameObject obj)
-    {
-        obj.transform.DORewind();
-        obj.transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.08f);
-        yield return new WaitForSeconds(0.1f);
-        Destroy(obj);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if(other.gameObject.CompareTag("FinishLineTrigger"))
         {
-            Invoke("SetCanMoveFalse", 0.1f);
+            Invoke("SetCanMoveFalse", 0.3f);
+            Invoke("FinishLevelAnimationTrigger", 0.35f);
             gameController.LevelFinished();
         }
     }
@@ -113,5 +117,10 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
         animator.SetBool("isWalking", false);
+    }
+
+    public void FinishLevelAnimationTrigger()
+    {
+        animator.SetTrigger("finishLevel");
     }
 }
