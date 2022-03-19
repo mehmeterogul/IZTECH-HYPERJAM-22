@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Selectable
+  - CubeSelectTrigger
+  - FinishLineTrigger
+  - Obstacle
+  - Collectable
+  - Selected
   layers:
   - Default
   - TransparentFX
@@ -12,10 +17,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - ObstacleDestroyer
+  - Obstacle
+  - Collectable
+  - Player
   - 
   - 
   - 

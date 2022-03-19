@@ -4,20 +4,52 @@ using UnityEngine;
 
 public class CubeSelector : MonoBehaviour
 {
+    [SerializeField] string selectedTag = "Selected";
+    [SerializeField] string selectableTag = "Selectable";
     [SerializeField] Material highlightMaterial;
+    [SerializeField] GameObject cubePrefab;
     Camera mainCamera;
+
+    bool canSelect = false;
+    int selectableCubeCount = 0;
+    int selectedCubeCount = 0;
+    int maxCubeCount = 0;
+    List<GameObject> selectedCubes = new List<GameObject>();
 
     private void Start()
     {
         mainCamera = Camera.main;
+        
+        foreach(Transform child in gameObject.transform)
+        {
+            maxCubeCount += 1;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0))
+        if(Input.GetMouseButtonDown(0))
+        {
+            canSelect = true;
+        }
+
+        if(Input.GetMouseButton(0) && canSelect)
         {
             RaycastMousePosition();
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            canSelect = false;
+
+            foreach(GameObject cube in selectedCubes)
+            {
+                Vector3 pos = new Vector3(cube.transform.position.x, cube.transform.position.y, 0f);
+                Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
+            }
+
+            FindObjectOfType<GameController>().SelectionComplete();
         }
         
     }
@@ -31,14 +63,32 @@ public class CubeSelector : MonoBehaviour
         {
             var selection = hit.transform;
 
-            if (selection.CompareTag("Selectable"))
+            if (selection.CompareTag(selectableTag) && (selectedCubeCount < selectableCubeCount))
             {
                 var selectionRenderer = selection.GetComponent<Renderer>();
                 if (selectionRenderer != null)
                 {
                     selectionRenderer.material = highlightMaterial;
                 }
+
+                selectedCubes.Add(selection.gameObject);
+                selection.tag = selectedTag;
+                selectedCubeCount++;
             }
         }
+    }
+
+    public void IncreaseSelectableCubeCount()
+    {
+        selectableCubeCount += 1;
+
+        if (selectableCubeCount > maxCubeCount) selectableCubeCount = maxCubeCount;
+    }
+
+    public void DecreaseSelectableCubeCount()
+    {
+        selectableCubeCount -= 1;
+
+        if (selectableCubeCount < 0) selectableCubeCount = 0;
     }
 }

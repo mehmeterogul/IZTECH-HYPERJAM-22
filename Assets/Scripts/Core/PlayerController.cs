@@ -11,6 +11,13 @@ public class PlayerController : MonoBehaviour
 
     bool canMove = true;
 
+    GameController gameController;
+
+    private void Start()
+    {
+        gameController = FindObjectOfType<GameController>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -35,6 +42,34 @@ public class PlayerController : MonoBehaviour
         if (transform.position.x < -horizontalBoundry)
         {
             transform.position = new Vector3(-horizontalBoundry, transform.position.y, transform.position.z);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("CubeSelectTrigger"))
+        {
+            gameController.SetStateToSelecting();
+        }
+
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            gameController.PlayerPickedUpCollectable();
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            gameController.PlayerHittedObtsacle();
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.CompareTag("FinishLineTrigger"))
+        {
+
         }
     }
 
