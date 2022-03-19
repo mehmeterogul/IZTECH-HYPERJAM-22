@@ -89,8 +89,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator DestroyGameObject(GameObject obj)
     {
         obj.transform.DORewind();
-        obj.transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f);
-        yield return new WaitForSeconds(0.25f);
+        obj.transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.08f);
+        yield return new WaitForSeconds(0.1f);
         Destroy(obj);
     }
 
@@ -98,7 +98,8 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.CompareTag("FinishLineTrigger"))
         {
-
+            Invoke("SetCanMoveFalse", 0.1f);
+            gameController.LevelFinished();
         }
     }
 

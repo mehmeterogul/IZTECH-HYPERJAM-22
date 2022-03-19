@@ -11,6 +11,7 @@ public class CubeSelector : MonoBehaviour
     [SerializeField] GameObject cubePrefab;
     Camera mainCamera;
 
+    bool isSelecting = false;
     bool canSelect = false;
     int selectableCubeCount = 0;
     int selectedCubeCount = 0;
@@ -33,12 +34,21 @@ public class CubeSelector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(selectableCubeCount == 0)
         {
-            canSelect = true;
+            CantSelect();
+            FindObjectOfType<GameController>().SelectionComplete();
+            return;
         }
 
-        if(Input.GetMouseButton(0) && canSelect)
+        if (!canSelect) return;
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            isSelecting = true;
+        }
+
+        if(Input.GetMouseButton(0) && isSelecting)
         {
             RaycastMousePosition();
         }
@@ -47,15 +57,17 @@ public class CubeSelector : MonoBehaviour
         {
             if(selectedCubes.Count > 1)
             {
-                canSelect = false;
+                isSelecting = false;
 
                 foreach (GameObject cube in selectedCubes)
                 {
                     Vector3 pos = new Vector3(cube.transform.position.x, cube.transform.position.y, 0f);
-                    Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
+                    GameObject temp = Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
+                    Destroy(temp, 1f);
                 }
 
                 ClearCubes();
+                CantSelect();
                 FindObjectOfType<GameController>().SelectionComplete();
             }
             else
@@ -115,9 +127,31 @@ public class CubeSelector : MonoBehaviour
             {
                 cubeRenderer.material = defaultMaterial;
             }
+
+            DecreaseSelectableCubeCount();
         }
 
         selectedCubes.Clear();
         selectedCubeCount = 0;
+    }
+
+    public void CanSelect()
+    {
+        Invoke("CanSelectInvoke", 0.3f);
+    }
+
+    void CanSelectInvoke()
+    {
+        canSelect = true;
+    }
+
+    public void CantSelect()
+    {
+        canSelect = false;
+    }
+
+    public int GetCubeCount()
+    {
+        return selectableCubeCount;
     }
 }
