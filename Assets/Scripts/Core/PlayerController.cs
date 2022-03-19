@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,15 +13,23 @@ public class PlayerController : MonoBehaviour
     bool canMove = true;
 
     GameController gameController;
+    [SerializeField] Animator animator;
 
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
+
+        if (!gameController)
+        {
+            Debug.Log("There is no game controller in the scene");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!gameController) return;
+
         if (!canMove) return;
 
         if(Input.GetMouseButtonDown(0))
@@ -31,7 +40,8 @@ public class PlayerController : MonoBehaviour
         if(Input.GetMouseButton(0))
         {
             Vector3 delta = Input.mousePosition - lastMousePosition;
-            transform.position = new Vector3(transform.position.x + delta.x * speedModifier, transform.position.y, transform.position.z);
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, new Vector3(transform.position.x + delta.x * speedModifier, transform.position.y, transform.position.z), 1f);
+            transform.position = smoothedPosition;
             lastMousePosition = Input.mousePosition;
         }
 
@@ -45,24 +55,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("CubeObstacle"))
+        {
+            gameController.PlayerHittedWall();
+            SetCanMoveFalse();
+            animator.SetTrigger("crash");
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("CubeSelectTrigger"))
         {
             gameController.SetStateToSelecting();
+            Destroy(other.gameObject);
         }
 
         if (other.gameObject.CompareTag("Collectable"))
         {
             gameController.PlayerPickedUpCollectable();
-            Destroy(other.gameObject);
+            StartCoroutine(DestroyGameObject(other.gameObject));
         }
 
         if (other.gameObject.CompareTag("Obstacle"))
         {
             gameController.PlayerHittedObtsacle();
-            Destroy(other.gameObject);
+            StartCoroutine(DestroyGameObject(other.gameObject));
         }
+    }
+
+    IEnumerator DestroyGameObject(GameObject obj)
+    {
+        obj.transform.DORewind();
+        obj.transform.DOPunchScale(new Vector3(0.8f, 0.8f, 0.8f), 0.15f);
+        yield return new WaitForSeconds(0.18f);
+        Destroy(obj);
     }
 
     private void OnTriggerExit(Collider other)
@@ -76,10 +105,12 @@ public class PlayerController : MonoBehaviour
     public void SetCanMoveTrue()
     {
         canMove = true;
+        animator.SetBool("isWalking", true);
     }
 
     public void SetCanMoveFalse()
     {
         canMove = false;
+        animator.SetBool("isWalking", false);
     }
 }

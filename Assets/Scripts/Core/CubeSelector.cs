@@ -7,6 +7,7 @@ public class CubeSelector : MonoBehaviour
     [SerializeField] string selectedTag = "Selected";
     [SerializeField] string selectableTag = "Selectable";
     [SerializeField] Material highlightMaterial;
+    [SerializeField] Material defaultMaterial;
     [SerializeField] GameObject cubePrefab;
     Camera mainCamera;
 
@@ -41,17 +42,25 @@ public class CubeSelector : MonoBehaviour
 
         if(Input.GetMouseButtonUp(0))
         {
-            canSelect = false;
-
-            foreach(GameObject cube in selectedCubes)
+            if(selectedCubes.Count > 1)
             {
-                Vector3 pos = new Vector3(cube.transform.position.x, cube.transform.position.y, 0f);
-                Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
-            }
+                canSelect = false;
 
-            FindObjectOfType<GameController>().SelectionComplete();
+                foreach (GameObject cube in selectedCubes)
+                {
+                    Vector3 pos = new Vector3(cube.transform.position.x, cube.transform.position.y, 0f);
+                    Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
+                }
+
+                ClearCubes();
+                FindObjectOfType<GameController>().SelectionComplete();
+            }
+            else
+            {
+                // Selection canceled
+                ClearCubes();
+            }
         }
-        
     }
 
     void RaycastMousePosition()
@@ -90,5 +99,22 @@ public class CubeSelector : MonoBehaviour
         selectableCubeCount -= 1;
 
         if (selectableCubeCount < 0) selectableCubeCount = 0;
+    }
+
+    void ClearCubes()
+    {
+        foreach (GameObject cube in selectedCubes)
+        {
+            cube.tag = selectableTag;
+
+            var cubeRenderer = cube.GetComponent<Renderer>();
+            if (cubeRenderer != null)
+            {
+                cubeRenderer.material = defaultMaterial;
+            }
+        }
+
+        selectedCubes.Clear();
+        selectedCubeCount = 0;
     }
 }

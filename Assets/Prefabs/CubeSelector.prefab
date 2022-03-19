@@ -475,6 +475,7 @@ MonoBehaviour:
   selectedTag: Selected
   selectableTag: Selectable
   highlightMaterial: {fileID: 2100000, guid: a5c9472598d652d41a95b57474f383d8, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 25efa9de00d4b12499e835c1363a9772, type: 2}
   cubePrefab: {fileID: 8852831360325529137, guid: 755887c348d278e48b3f25736329f3f8,
     type: 3}
 --- !u!1 &3099017531394586717

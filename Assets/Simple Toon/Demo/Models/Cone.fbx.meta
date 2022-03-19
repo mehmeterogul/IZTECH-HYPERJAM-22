@@ -1,14 +1,11 @@
 fileFormatVersion: 2
-guid: 7fdc20f5f7c914e478e5a785b18335d1
+guid: e56f90513e23b45eeb9185aa97a78f8e
 ModelImporter:
-  serializedVersion: 20200
-  internalIDToNameTable:
-  - first:
-      74: 8886567251451666223
-    second: KayKit Animated Character|Run
+  serializedVersion: 20101
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 2
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -98,7 +95,6 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

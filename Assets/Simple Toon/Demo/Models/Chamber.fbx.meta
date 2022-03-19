@@ -1,14 +1,11 @@
 fileFormatVersion: 2
-guid: da01991917d1e0b438e694691e7feb6b
+guid: 450ff0f9365254b03ac5bf72cb36923a
 ModelImporter:
-  serializedVersion: 20200
-  internalIDToNameTable:
-  - first:
-      74: 7807934186493442652
-    second: KayKit Animated Character|Walk
+  serializedVersion: 20101
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
-    materialImportMode: 2
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -98,7 +95,6 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
-  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

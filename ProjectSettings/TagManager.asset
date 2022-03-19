@@ -10,6 +10,9 @@ TagManager:
   - Obstacle
   - Collectable
   - Selected
+  - CubeObstacle
+  - NotBreakableCube
+  - Cube
   layers:
   - Default
   - TransparentFX
@@ -21,8 +24,8 @@ TagManager:
   - Obstacle
   - Collectable
   - Player
-  - 
-  - 
+  - Cube
+  - CubeObstacle
   - 
   - 
   - 
