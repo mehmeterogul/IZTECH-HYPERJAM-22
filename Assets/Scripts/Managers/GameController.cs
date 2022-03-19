@@ -15,11 +15,15 @@ public class GameController : MonoBehaviour
     PlayerController playerController;
 
     bool isGameOver = false;
-    STATE state = STATE.RUNNING;
+    STATE state = STATE.IDLE;
 
     [SerializeField] TextMeshProUGUI cubeCountText;
     [SerializeField] GameObject gameOverText;
     [SerializeField] GameObject restartButton;
+    [SerializeField] GameObject nextLevelText;
+    [SerializeField] GameObject nextLevelButton;
+    [SerializeField] GameObject cursor;
+    [SerializeField] GameObject selectCursor;
 
     // Start is called before the first frame update
     void Start()
@@ -46,10 +50,6 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("There is no player controller in the scene");
         }
-        else
-        {
-            playerController.SetCanMoveTrue();
-        }
 
         cubeCountText.text = "0";
     }
@@ -70,6 +70,13 @@ public class GameController : MonoBehaviour
                 // Do nothing, wait for selection or level finish animation.
                 break;
         }
+    }
+
+    public void StartGame()
+    {
+        state = STATE.RUNNING;
+        playerController.SetCanMoveTrue();
+        cursor.SetActive(false);
     }
 
     public void SetStateToSelecting()
@@ -120,6 +127,14 @@ public class GameController : MonoBehaviour
     public void LevelFinished()
     {
         state = STATE.IDLE;
+        FindObjectOfType<CameraSwitcher>().SwitchCamera();
+        Invoke("ActivateNextLevelComponents", 0.5f);
+    }
+
+    void ActivateNextLevelComponents()
+    {
+        nextLevelText.SetActive(true);
+        nextLevelButton.SetActive(true);
     }
 
     void UpdateCubeCountText()
@@ -139,5 +154,28 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void NextLevelButton()
+    {
+        nextLevelButton.GetComponent<Button>().interactable = false;
+        StartCoroutine(NextLevel());
+    }
+
+    public IEnumerator NextLevel()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void ActivateSelectCursor()
+    {
+        selectCursor.SetActive(true);
+        Invoke("DeactivateSelectCursor", 5f);
+    }
+
+    public void DeactivateSelectCursor()
+    {
+        selectCursor.SetActive(false);
     }
 }

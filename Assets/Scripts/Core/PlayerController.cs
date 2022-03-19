@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip pickUpSound;
     [SerializeField] AudioClip hitObstacleSound;
     [SerializeField] AudioClip hitWallSound;
+    [SerializeField] AudioClip finishSound;
 
     private void Start()
     {
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
+            gameController.StartGame();
             lastMousePosition = Input.mousePosition;
         }
 
@@ -95,12 +97,18 @@ public class PlayerController : MonoBehaviour
             transform.DORewind();
             transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f);
         }
+
+        if(other.gameObject.CompareTag("SelectCursorTutorial"))
+        {
+            gameController.ActivateSelectCursor();
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if(other.gameObject.CompareTag("FinishLineTrigger"))
         {
+            audioSource.PlayOneShot(finishSound, 1f);
             Invoke("SetCanMoveFalse", 0.3f);
             Invoke("FinishLevelAnimationTrigger", 0.35f);
             gameController.LevelFinished();
