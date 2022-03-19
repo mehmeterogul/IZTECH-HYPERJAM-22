@@ -17,14 +17,17 @@ public class CubeSelector : MonoBehaviour
     int maxCubeCount = 0;
     List<GameObject> selectedCubes = new List<GameObject>();
 
-    private void Start()
+    private void Awake()
     {
-        mainCamera = Camera.main;
-        
-        foreach(Transform child in gameObject.transform)
+        foreach (Transform child in gameObject.transform)
         {
             maxCubeCount += 1;
         }
+    }
+
+    private void Start()
+    {
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame

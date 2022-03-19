@@ -89,8 +89,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator DestroyGameObject(GameObject obj)
     {
         obj.transform.DORewind();
-        obj.transform.DOPunchScale(new Vector3(0.8f, 0.8f, 0.8f), 0.15f);
-        yield return new WaitForSeconds(0.18f);
+        obj.transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f);
+        yield return new WaitForSeconds(0.25f);
         Destroy(obj);
     }
 

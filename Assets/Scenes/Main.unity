@@ -8649,12 +8649,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!95 &1887717003 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1887717003, guid: 20a141ce5608fc048932ba3de01a5277,
-    type: 3}
-  m_PrefabInstance: {fileID: 6294150456543736220}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1926119507
 GameObject:
   m_ObjectHideFlags: 0
@@ -13155,26 +13149,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6294150456435655372, guid: 20a141ce5608fc048932ba3de01a5277,
-        type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 1887717003}
-    - target: {fileID: 6294150456435655376, guid: 20a141ce5608fc048932ba3de01a5277,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 0.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 6294150456435655376, guid: 20a141ce5608fc048932ba3de01a5277,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6294150456435655376, guid: 20a141ce5608fc048932ba3de01a5277,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.25
-      objectReference: {fileID: 0}
     - target: {fileID: 6294150456435655379, guid: 20a141ce5608fc048932ba3de01a5277,
         type: 3}
       propertyPath: m_RootOrder
@@ -13235,8 +13209,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1601775683, guid: 20a141ce5608fc048932ba3de01a5277, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20a141ce5608fc048932ba3de01a5277, type: 3}
 --- !u!114 &6460123105262321443
 MonoBehaviour:
