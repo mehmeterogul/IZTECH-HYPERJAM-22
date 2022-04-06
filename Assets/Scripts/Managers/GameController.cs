@@ -95,10 +95,10 @@ public class GameController : MonoBehaviour
         UpdateCubeCountText();
     }
 
-    public void PlayerHittedObtsacle()
+    public void PlayerHittedObtsacle(int decreaseCount)
     {
         if (!cubeSelector) return;
-        cubeSelector.DecreaseSelectableCubeCount();
+        cubeSelector.DecreaseSelectableCubeCount(decreaseCount);
         UpdateCubeCountText();
     }
 

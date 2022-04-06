@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] AudioClip hitWallSound;
     [SerializeField] AudioClip finishSound;
 
+    [SerializeField] GameObject cubePrefab;
+    [SerializeField] Transform cubeSpillPosition;
+
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
@@ -65,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("CubeObstacle") && !hasHitted)
+        if ((collision.gameObject.CompareTag("CubeObstacle") || collision.gameObject.CompareTag("NotBreakableCube")) && !hasHitted)
         {
             audioSource.PlayOneShot(hitWallSound, 1f);
             gameController.PlayerHittedWall();
@@ -93,7 +96,17 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Obstacle"))
         {
             audioSource.PlayOneShot(hitObstacleSound, 1f);
-            gameController.PlayerHittedObtsacle();
+
+            int decreaseCount = Random.Range(2, 4);
+            gameController.PlayerHittedObtsacle(decreaseCount);
+
+            for (int i = 0; i < decreaseCount; i++)
+            {
+                GameObject temp = Instantiate(cubePrefab, cubeSpillPosition.position, Quaternion.identity);
+                temp.GetComponent<Rigidbody>().AddForce(GetRandomForceVector(), ForceMode.Impulse);
+                Destroy(temp, 2f);
+            }
+
             transform.DORewind();
             transform.DOPunchScale(new Vector3(0.5f, 0.5f, 0.5f), 0.2f);
         }
@@ -130,5 +143,20 @@ public class PlayerController : MonoBehaviour
     public void FinishLevelAnimationTrigger()
     {
         animator.SetTrigger("finishLevel");
+    }
+
+    Vector3 GetRandomForceVector()
+    {
+        return new Vector3(GetRandomXValue(), GetRandomYValue(), -10f);
+    }
+
+    float GetRandomXValue()
+    {
+        return Random.Range(2, 4);
+    }
+
+    float GetRandomYValue()
+    {
+        return Random.Range(7, 12);
     }
 }

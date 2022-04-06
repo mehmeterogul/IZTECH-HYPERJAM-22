@@ -60,14 +60,15 @@ public class CubeSelector : MonoBehaviour
 
         if(Input.GetMouseButtonUp(0))
         {
+            // instantiate objects in selected area
             if(selectedCubes.Count > 1)
             {
                 isSelecting = false;
 
                 foreach (GameObject cube in selectedCubes)
                 {
-                    Vector3 pos = new Vector3(cube.transform.position.x, cube.transform.position.y, 0f);
-                    GameObject temp = Instantiate(cubePrefab, Vector3Int.RoundToInt(pos), Quaternion.identity);
+                    Vector3 pos = Vector3Int.RoundToInt(new Vector3(cube.transform.localPosition.x, cube.transform.localPosition.y, 0f));
+                    GameObject temp = Instantiate(cubePrefab, pos + (Vector3.up * 0.5f), Quaternion.identity);
                     Destroy(temp, 1f);
                 }
 
@@ -118,9 +119,9 @@ public class CubeSelector : MonoBehaviour
         if (selectableCubeCount > maxCubeCount) selectableCubeCount = maxCubeCount;
     }
 
-    public void DecreaseSelectableCubeCount()
+    public void DecreaseSelectableCubeCount(int decreaseCount)
     {
-        selectableCubeCount -= 1;
+        selectableCubeCount -= decreaseCount;
 
         if (selectableCubeCount < 0) selectableCubeCount = 0;
     }
@@ -137,7 +138,7 @@ public class CubeSelector : MonoBehaviour
                 cubeRenderer.material = defaultMaterial;
             }
 
-            DecreaseSelectableCubeCount();
+            DecreaseSelectableCubeCount(1);
         }
 
         selectedCubes.Clear();
